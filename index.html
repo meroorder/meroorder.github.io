@@ -1,392 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Coming Soon</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Cinzel+Decorative:wght@400&family=Jost:wght@200;300&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-  :root {
-    --ink: #0e0c0a;
-    --parchment: #f5f0e8;
-    --gold: #b89a5a;
-    --gold-light: #d4b87a;
-    --warm-mid: #8a7a60;
-  }
-
-  html, body {
-    height: 100%;
-    overflow: hidden;
-    background: var(--ink);
-    color: var(--parchment);
-    font-family: 'Cormorant Garamond', serif;
-  }
-
-  /* Grain overlay */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
-    opacity: 0.04;
-    pointer-events: none;
-    z-index: 100;
-  }
-
-  /* Radial glow */
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(184,154,90,0.07) 0%, transparent 70%);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .scene {
-    position: relative;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 1;
-    gap: 0;
-  }
-
-  /* Decorative top line */
-  .ornament {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    opacity: 0;
-    animation: fadeUp 1.2s ease forwards 0.4s;
-    margin-bottom: 36px;
-  }
-
-  .ornament-line {
-    width: 80px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold));
-  }
-  .ornament-line.right {
-    background: linear-gradient(90deg, var(--gold), transparent);
-  }
-
-  .ornament-diamond {
-    width: 6px;
-    height: 6px;
-    border: 1px solid var(--gold);
-    transform: rotate(45deg);
-  }
-
-  .eyebrow {
-    font-family: 'Jost', sans-serif;
-    font-weight: 200;
-    font-size: 10px;
-    letter-spacing: 0.35em;
-    text-transform: uppercase;
-    color: var(--gold);
-    opacity: 0;
-    animation: fadeUp 1.2s ease forwards 0.6s;
-    margin-bottom: 20px;
-  }
-
-  h1 {
-    font-family: 'Cinzel Decorative', cursive;
-    font-size: clamp(2.4rem, 6vw, 5rem);
-    font-weight: 400;
-    letter-spacing: 0.12em;
-    line-height: 1.1;
-    text-align: center;
-    color: var(--parchment);
-    opacity: 0;
-    animation: fadeUp 1.4s ease forwards 0.8s;
-    margin-bottom: 24px;
-  }
-
-  .subtitle {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-weight: 300;
-    font-size: clamp(1rem, 2vw, 1.3rem);
-    color: var(--warm-mid);
-    letter-spacing: 0.08em;
-    text-align: center;
-    max-width: 420px;
-    line-height: 1.7;
-    opacity: 0;
-    animation: fadeUp 1.4s ease forwards 1s;
-    margin-bottom: 52px;
-  }
-
-  /* Email form */
-  .form-wrap {
-    display: flex;
-    align-items: stretch;
-    gap: 0;
-    opacity: 0;
-    animation: fadeUp 1.4s ease forwards 1.2s;
-    margin-bottom: 60px;
-  }
-
-  .form-wrap input {
-    background: transparent;
-    border: 1px solid rgba(184,154,90,0.3);
-    border-right: none;
-    color: var(--parchment);
-    font-family: 'Jost', sans-serif;
-    font-weight: 200;
-    font-size: 12px;
-    letter-spacing: 0.15em;
-    padding: 14px 22px;
-    width: 240px;
-    outline: none;
-    transition: border-color 0.3s;
-  }
-
-  .form-wrap input::placeholder {
-    color: rgba(245,240,232,0.3);
-    letter-spacing: 0.2em;
-  }
-
-  .form-wrap input:focus {
-    border-color: rgba(184,154,90,0.7);
-  }
-
-  .form-wrap button {
-    background: var(--gold);
-    border: 1px solid var(--gold);
-    color: var(--ink);
-    font-family: 'Jost', sans-serif;
-    font-weight: 300;
-    font-size: 10px;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    padding: 14px 22px;
-    cursor: pointer;
-    transition: background 0.3s, color 0.3s;
-    white-space: nowrap;
-  }
-
-  .form-wrap button:hover {
-    background: var(--gold-light);
-  }
-
-  /* Countdown */
-  .countdown {
-    display: flex;
-    gap: 40px;
-    opacity: 0;
-    animation: fadeUp 1.4s ease forwards 1.4s;
-    margin-bottom: 60px;
-  }
-
-  .count-block {
-    text-align: center;
-  }
-
-  .count-num {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-    font-size: clamp(2rem, 4vw, 3.2rem);
-    color: var(--parchment);
-    line-height: 1;
-    display: block;
-    min-width: 2ch;
-  }
-
-  .count-label {
-    font-family: 'Jost', sans-serif;
-    font-weight: 200;
-    font-size: 9px;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-top: 6px;
-    display: block;
-  }
-
-  .count-sep {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2.4rem;
-    font-weight: 300;
-    color: rgba(184,154,90,0.3);
-    align-self: flex-start;
-    padding-top: 4px;
-    line-height: 1;
-  }
-
-  /* Bottom ornament */
-  .bottom-ornament {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    opacity: 0;
-    animation: fadeUp 1.4s ease forwards 1.6s;
-  }
-
-  .bottom-ornament .ornament-line {
-    width: 1px;
-    height: 40px;
-    background: linear-gradient(180deg, var(--gold), transparent);
-  }
-
-  .social-row {
-    display: flex;
-    gap: 24px;
-    margin-top: 8px;
-  }
-
-  .social-row a {
-    font-family: 'Jost', sans-serif;
-    font-weight: 200;
-    font-size: 9px;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--warm-mid);
-    text-decoration: none;
-    transition: color 0.3s;
-  }
-
-  .social-row a:hover { color: var(--gold-light); }
-
-  /* Corner marks */
-  .corner {
-    position: fixed;
-    width: 30px;
-    height: 30px;
-    opacity: 0.35;
-    animation: fadeIn 2s ease forwards 2s;
-  }
-  .corner-tl { top: 28px; left: 28px; border-top: 1px solid var(--gold); border-left: 1px solid var(--gold); }
-  .corner-tr { top: 28px; right: 28px; border-top: 1px solid var(--gold); border-right: 1px solid var(--gold); }
-  .corner-bl { bottom: 28px; left: 28px; border-bottom: 1px solid var(--gold); border-left: 1px solid var(--gold); }
-  .corner-br { bottom: 28px; right: 28px; border-bottom: 1px solid var(--gold); border-right: 1px solid var(--gold); }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(18px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to   { opacity: 0.35; }
-  }
-
-  /* Confirmed state */
-  .confirm-msg {
-    display: none;
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    color: var(--gold-light);
-    font-size: 1rem;
-    letter-spacing: 0.08em;
-  }
-</style>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="refresh" content="60">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Site Under Maintenance</title>
+  <style>
+    body {
+      background-color: #fff;
+      color: #111827;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 100px 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+    }
+    h1 {
+      font-size: 3em;
+      color: #1c84c6;
+    }
+    p {
+      font-size: 1.2em;
+      margin: 20px 0;
+    }
+    .spinner {
+      margin: 40px auto;
+      width: 40px;
+      height: 40px;
+      border: 5px solid #ddd;
+      border-top: 5px solid #1c84c6;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
 </head>
 <body>
-
-<div class="corner corner-tl"></div>
-<div class="corner corner-tr"></div>
-<div class="corner corner-bl"></div>
-<div class="corner corner-br"></div>
-
-<main class="scene">
-  <div class="ornament">
-    <span class="ornament-line"></span>
-    <span class="ornament-diamond"></span>
-    <span class="ornament-line right"></span>
+  <div class="container">
+    <h1>We'll Be Back Soon</h1>
+    <p>Our site is currently undergoing scheduled maintenance.<br>We will be back soon.</p>
+    <div class="spinner"></div>
+    <p><small>© 2026 MeroOrder.Com</small></p>
   </div>
 
-  <p class="eyebrow">Something extraordinary awaits</p>
-
-  <h1>Coming Soon</h1>
-
-  <p class="subtitle">We are crafting an experience worthy of your attention.<br>Be the first to know when we arrive.</p>
-
-  <div class="form-wrap" id="formWrap">
-    <input type="email" id="emailInput" placeholder="Your email address">
-    <button onclick="handleSubmit()">Notify Me</button>
-  </div>
-  <p class="confirm-msg" id="confirmMsg">You're on the list. We'll be in touch.</p>
-
-  <div class="countdown" id="countdown">
-    <div class="count-block">
-      <span class="count-num" id="cd-days">00</span>
-      <span class="count-label">Days</span>
-    </div>
-    <span class="count-sep">·</span>
-    <div class="count-block">
-      <span class="count-num" id="cd-hours">00</span>
-      <span class="count-label">Hours</span>
-    </div>
-    <span class="count-sep">·</span>
-    <div class="count-block">
-      <span class="count-num" id="cd-mins">00</span>
-      <span class="count-label">Minutes</span>
-    </div>
-    <span class="count-sep">·</span>
-    <div class="count-block">
-      <span class="count-num" id="cd-secs">00</span>
-      <span class="count-label">Seconds</span>
-    </div>
-  </div>
-
-  <div class="bottom-ornament">
-    <span class="ornament-line"></span>
-    <div class="social-row">
-      <a href="#">Instagram</a>
-      <a href="#">Twitter</a>
-      <a href="#">LinkedIn</a>
-    </div>
-  </div>
-</main>
-
-<script>
-  // Countdown — set your launch date here
-  const launch = new Date('2026-09-01T00:00:00');
-
-  function pad(n) { return String(n).padStart(2, '0'); }
-
-  function tick() {
-    const now = new Date();
-    const diff = launch - now;
-    if (diff <= 0) {
-      document.getElementById('cd-days').textContent = '00';
-      document.getElementById('cd-hours').textContent = '00';
-      document.getElementById('cd-mins').textContent = '00';
-      document.getElementById('cd-secs').textContent = '00';
-      return;
-    }
-    const days  = Math.floor(diff / 864e5);
-    const hours = Math.floor((diff % 864e5) / 36e5);
-    const mins  = Math.floor((diff % 36e5) / 6e4);
-    const secs  = Math.floor((diff % 6e4) / 1e3);
-    document.getElementById('cd-days').textContent  = pad(days);
-    document.getElementById('cd-hours').textContent = pad(hours);
-    document.getElementById('cd-mins').textContent  = pad(mins);
-    document.getElementById('cd-secs').textContent  = pad(secs);
-  }
-
-  tick();
-  setInterval(tick, 1000);
-
-  function handleSubmit() {
-    const val = document.getElementById('emailInput').value.trim();
-    if (!val || !val.includes('@')) {
-      document.getElementById('emailInput').style.borderColor = 'rgba(200,80,60,0.6)';
-      return;
-    }
-    document.getElementById('formWrap').style.display = 'none';
-    const msg = document.getElementById('confirmMsg');
-    msg.style.display = 'block';
-    msg.style.animation = 'fadeUp 0.8s ease forwards';
-  }
-</script>
-</body>
-</html>
+</body></html>
